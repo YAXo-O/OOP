@@ -12,6 +12,7 @@ Building::Building(QWidget *parent) : QWidget(parent), floorsLayout(new QVBoxLay
 void Building::addFloor(Floor *f) noexcept
 {
     floors.push_back(f);
+    floorsLayout->insertWidget(0, f);
 }
 
 void Building::removeFloor(int id) throw(std::out_of_range)
@@ -39,7 +40,6 @@ void Building::removeFloor(Floor *f) throw(std::out_of_range, std::invalid_argum
 
     if(bSearching)
         std::invalid_argument("Specified floor is not in this building");
-
 }
 
 int Building::getFloorsCount() noexcept

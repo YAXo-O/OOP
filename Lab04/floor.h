@@ -9,7 +9,8 @@ class Floor : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Floor(int floorNum = 0, QColor wallColor = Qt::cyan, QWidget *parent = 0);
+    explicit Floor(int floorNum = 0, QColor wallColor = Qt::cyan, QWidget *parent = nullptr);
+    ~Floor() = default;
 
     void changeFloor(int newNum) noexcept;
 

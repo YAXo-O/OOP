@@ -10,7 +10,8 @@ class Building : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Building(QWidget *parent = 0);
+    explicit Building(QWidget *parent = nullptr);
+    ~Building() = default;
 
     void addFloor(Floor *f) noexcept;
     void removeFloor(int id) throw(std::out_of_range); // Удаляем этаж из здания и освобождаем память

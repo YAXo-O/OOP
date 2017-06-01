@@ -15,7 +15,7 @@ Floor::Floor(int _floorNum, QColor _wallColor, QWidget *parent) : QWidget(parent
     floorLab->setText(floorSignPrefix + QString::number(floorNum));
 }
 
-void Floor::changeFloor(int newNum)
+void Floor::changeFloor(int newNum) noexcept
 {
     floorNum = newNum;
     floorLab->setText(floorSignPrefix + QString::number(floorNum));

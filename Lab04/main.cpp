@@ -1,12 +1,13 @@
 #include <QApplication>
-#include "floor.h"
+#include "buildingdesigner.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);;
 
-    Floor test(0);
-    test.show();
+    BuildingDesigner designer;
+    Building *building = designer.constructBuilding(10);
+    building->show();
 
     return a.exec();
 }
