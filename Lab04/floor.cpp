@@ -2,6 +2,8 @@
 #include <QPainter>
 #include "floor.h"
 
+const QString Floor::floorSignPrefix = "Current floor: ";
+
 Floor::Floor(int _floorNum, QColor _wallColor, QWidget *parent) : QWidget(parent),
     floorNum(_floorNum), callPB(new QPushButton()), wallColor(_wallColor), floorLab(new QLabel)
 {
@@ -10,7 +12,13 @@ Floor::Floor(int _floorNum, QColor _wallColor, QWidget *parent) : QWidget(parent
     layout()->addWidget(floorLab);
 
     callPB->setText("Call lift");
-    floorLab->setText("Current floor: " + QString::number(floorNum));
+    floorLab->setText(floorSignPrefix + QString::number(floorNum));
+}
+
+void Floor::changeFloor(int newNum)
+{
+    floorNum = newNum;
+    floorLab->setText(floorSignPrefix + QString::number(floorNum));
 }
 
 void Floor::paintEvent(QPaintEvent *)
