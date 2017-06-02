@@ -2,8 +2,8 @@
 #define FLOOR_H
 
 #include <QWidget>
-#include <QPushButton>
 #include <QLabel>
+#include "Button/button.h"
 
 class Floor : public QWidget
 {
@@ -21,7 +21,7 @@ private:
     static const QString floorSignPrefix;
 
     int floorNum;
-    QPushButton *callPB;
+    Button *callPB;
     QColor wallColor;
     QLabel *floorLab;
 };

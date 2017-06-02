@@ -5,7 +5,7 @@
 const QString Floor::floorSignPrefix = "Current floor: ";
 
 Floor::Floor(int _floorNum, QColor _wallColor, QWidget *parent) : QWidget(parent),
-    floorNum(_floorNum), callPB(new QPushButton()), wallColor(_wallColor), floorLab(new QLabel)
+    floorNum(_floorNum), callPB(new Button()), wallColor(_wallColor), floorLab(new QLabel)
 {
     setLayout(new QHBoxLayout());
     layout()->addWidget(callPB);
