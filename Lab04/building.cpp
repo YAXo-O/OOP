@@ -1,12 +1,14 @@
 #include <QHBoxLayout>
 #include <stdexcept>
 #include "building.h"
+#include <iostream>
 
 Building::Building(QWidget *parent) : QWidget(parent), floorsLayout(new QVBoxLayout)
 {
     QHBoxLayout *horizontalLayout = new QHBoxLayout;
     horizontalLayout->addLayout(floorsLayout);
     setLayout(horizontalLayout);
+
 }
 
 void Building::addFloor(Floor *f) noexcept
@@ -45,4 +47,13 @@ void Building::removeFloor(Floor *f) throw(std::out_of_range, std::invalid_argum
 int Building::getFloorsCount() noexcept
 {
     return floors.count();
+}
+
+int Building::getFloorHeight() throw(std::out_of_range)
+{
+    if(floors.empty())
+        throw std::out_of_range("No floors currently exist");
+
+    std::cout << floors[0]->rect().height() << std::endl;
+    return floors[0]->height();
 }

@@ -18,6 +18,7 @@ public:
     void removeFloor(Floor *f) throw(std::out_of_range, std::invalid_argument);
 
     int getFloorsCount() noexcept;
+    int getFloorHeight() throw(std::out_of_range);
 
 private:
     QVector<Floor *> floors;
