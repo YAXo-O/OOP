@@ -9,6 +9,8 @@ class Building;
 
 class LiftBase : public QWidget
 {
+    friend class LiftState;
+
     Q_OBJECT
 public:
     explicit LiftBase(QColor backColor = Qt::lightGray, QWidget *parent = nullptr);
@@ -38,6 +40,9 @@ private:
     LiftState *curState;
     Building *owner;
     int currentFloor;
+
+private slots:
+    void moveLift(int destination);
 };
 
 #endif // LIFTBASE_H

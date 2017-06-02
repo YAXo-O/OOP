@@ -1,3 +1,4 @@
+#include <QThread>
 #include <QPainter>
 #include <QHBoxLayout>
 #include "liftbase.h"
@@ -78,4 +79,17 @@ void LiftBase::paintEvent(QPaintEvent *)
     p.drawLine(0, height()-4, width(), height()-4);
 
     p.end();
+}
+
+void LiftBase::moveLift(int destination)
+{
+    int path = destination - y();
+    int dir = path/(abs(path));
+    int curSpeed = speedRate * dir;
+    int cycles = path/curSpeed;
+    for(int i = 0; i < cycles; i++)
+    {
+        move(x(), y() + curSpeed);
+        QThread::msleep(33); // Частота кадров = 30
+    }
 }
