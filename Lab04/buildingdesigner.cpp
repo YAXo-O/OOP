@@ -14,8 +14,13 @@ Building *BuildingDesigner::constructBuilding(int floorCount, QWidget *parent) n
         building->addFloor(builder.getFloor(i));
 
     // Добавляем шахту с лифтом
-    Tunnel *tunnel = builder.getTunnel(builder.getLift());
+    LiftBase *lift = builder.getLift();
+    Tunnel *tunnel = builder.getTunnel(lift);
     building->layout()->addWidget(tunnel);
+    LiftPanel *panel = builder.getLiftPanel(floorCount);
+    building->addLift(lift);
+    building->addLiftPanel(panel);
+    building->connectLiftToPanel();
 
     // Дабы изменить размеры виджетов в соответствии с layout
     building->show();

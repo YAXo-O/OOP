@@ -1,9 +1,8 @@
 #include <QHBoxLayout>
 #include <stdexcept>
 #include "building.h"
-#include <iostream>
 
-Building::Building(QWidget *parent) : QWidget(parent), floorsLayout(new QVBoxLayout)
+Building::Building(QWidget *parent) : QWidget(parent), floorsLayout(new QVBoxLayout), lift(nullptr), panel(nullptr)
 {
     QHBoxLayout *horizontalLayout = new QHBoxLayout;
     horizontalLayout->addLayout(floorsLayout);
@@ -44,6 +43,24 @@ void Building::removeFloor(Floor *f) throw(std::out_of_range, std::invalid_argum
         std::invalid_argument("Specified floor is not in this building");
 }
 
+void Building::addLift(LiftBase *l) noexcept
+{
+    lift = l;
+}
+
+void Building::addLiftPanel(LiftPanel *p) noexcept
+{
+    panel = p;
+}
+
+void Building::connectLiftToPanel() throw(std::invalid_argument)
+{
+    if(!lift || !panel)
+        throw std::invalid_argument("Both lift and panel should be specified to be connected");
+
+    connect(lift, SIGNAL(floorChanged(int)), panel, SLOT(updateFloor(int)));
+}
+
 int Building::getFloorsCount() noexcept
 {
     return floors.count();
@@ -54,6 +71,27 @@ int Building::getFloorHeight() throw(std::out_of_range)
     if(floors.empty())
         throw std::out_of_range("No floors currently exist");
 
-    std::cout << floors[0]->rect().height() << std::endl;
     return floors[0]->height();
+}
+
+int Building::getLiftFloor(LiftBase *lift) throw(std::out_of_range)
+{
+    if(!floors.count())
+        throw std::out_of_range("No floors are present in the building");
+
+    bool bGoSearching = true;
+    int floor = 0;
+    for(int i = 0; i < floors.count()-1 && bGoSearching; i++)
+    {
+        if(floors[i]->y() >= lift->y() && (floors[i]->y() - floors[i]->height()) <= lift->y())
+        {
+            bGoSearching = false;
+            floor = i;
+        }
+    }
+
+    if(bGoSearching)
+        throw std::out_of_range("Lift is out of the building");
+
+    return floor;
 }
