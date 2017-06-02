@@ -15,6 +15,11 @@ Tunnel *BuildingBuilder::getTunnel(LiftBase *lift, QColor bgColor, QWidget *pare
     return new Tunnel(lift, bgColor, parent);
 }
 
+LiftPanel *BuildingBuilder::getLiftPanel(int floors, QWidget *parent)
+{
+    return new LiftPanel(floors, parent);
+}
+
 Building *BuildingBuilder::getBuilding(QWidget *parent) noexcept
 {
     return new Building(parent);
