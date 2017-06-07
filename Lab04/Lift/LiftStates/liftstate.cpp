@@ -19,3 +19,8 @@ void LiftState::openDoors()
 void LiftState::closeDoors()
 {
 }
+
+LiftBase *LiftState::getParent()
+{
+    return parent;
+}

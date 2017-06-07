@@ -14,6 +14,9 @@ public:
 
     void changeFloor(int newNum) noexcept;
 
+signals:
+    void callLift(int, int);
+
 protected:
     void paintEvent(QPaintEvent *event) override;
 
@@ -24,6 +27,9 @@ private:
     Button *callPB;
     QColor wallColor;
     QLabel *floorLab;
+
+private slots:
+    void buttonPressed();
 };
 
 #endif // FLOOR_H

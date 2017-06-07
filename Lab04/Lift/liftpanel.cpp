@@ -19,6 +19,7 @@ LiftPanel::LiftPanel(int floors, QWidget *parent) : QWidget(parent), lcdNum(null
         Button *pb = new Button(i);
         pb->setText(QString::number(i));
         table->addWidget(pb, (floors-i-1)%perCol, (floors-i-1)/perCol);
+        connect(pb, SIGNAL(activated()), this, SLOT(buttonPressed()));
     }
 
     vertical->addLayout(table);

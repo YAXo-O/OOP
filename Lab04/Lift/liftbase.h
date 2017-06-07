@@ -3,15 +3,20 @@
 
 #include <QWidget>
 #include <stdexcept>
-#include <QList>
+#include <QVector>
 #include "LiftStates/liftstate.h"
 #include "callinfo.h"
+#include "liftdoors.h"
 
 class Building;
+class Machine;
 
 class LiftBase : public QWidget
 {
-    friend class LiftState;
+    friend class OpenningState;
+    friend class ClosingState;
+    friend class GoUpState;
+    friend class Machine;
 
     Q_OBJECT
 public:
@@ -26,7 +31,11 @@ public:
     void setOwner(Building *owner) noexcept;
     Building *getOwner() noexcept;
 
-    void changeState(LiftState *current, int event) throw(std::invalid_argument);
+    void changeState(int event) throw(std::invalid_argument);
+    void updateLists() noexcept;
+    void workOnList(QVector<int> &vector, QVector<int> &opposite,
+                    bool (*condition)(const int, const int), bool (*cmp)(const int, const int)) noexcept;
+    void chooseTarget() noexcept;
 
 public slots:
     void goUp() throw(std::logic_error);
@@ -39,7 +48,7 @@ signals:
     void floorChanged(int floor);
 
 protected:
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) override;
 
 private:
     QColor backWallColor;
@@ -47,12 +56,17 @@ private:
     LiftState *curState;
     Building *owner;
 
-    QList<int> upperCallsLift;
-    QList<int> upperCallsBuilding;
-    QList<int> lowerCallsLift;
-    QList<int> lowerCallsBuilding;
+    QVector<int> upperCallsLift;
+    QVector<int> upperCallsBuilding;
+    QVector<int> lowerCallsLift;
+    QVector<int> lowerCallsBuilding;
     int target;
     bool bNoTarget;
+
+    LiftDoors *door;
+    Machine *machine;
+
+    void insert(QVector<int> &list, int value, bool (*cmpr)(const int, const int));
 
 private slots:
     void moveLift(int destination) noexcept;

@@ -26,6 +26,7 @@ public:
     int getFloorsCount() noexcept;
     int getFloorHeight() throw(std::out_of_range);
     int getLiftFloor(LiftBase *lift) throw(std::out_of_range);
+    int getFloorY(int floor) throw(std::out_of_range);
 
 private:
     QVector<Floor *> floors;

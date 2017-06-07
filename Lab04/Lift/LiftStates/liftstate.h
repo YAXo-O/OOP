@@ -7,7 +7,7 @@ class LiftState
 {
 public:
     LiftState(LiftBase *parent);
-    ~LiftState() = default;
+    virtual ~LiftState() = default;
 
     virtual void goUp();
     virtual void goDown();
@@ -15,6 +15,8 @@ public:
     virtual void closeDoors();
 
     virtual int type() = 0; // Задаёт тип текущего состояния
+
+    LiftBase *getParent();
 
 protected:
     LiftBase *parent;

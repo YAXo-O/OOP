@@ -46,6 +46,7 @@ void Building::removeFloor(Floor *f) throw(std::out_of_range, std::invalid_argum
 void Building::addLift(LiftBase *l) noexcept
 {
     lift = l;
+    lift->setOwner(this);
 }
 
 void Building::addLiftPanel(LiftPanel *p) noexcept
@@ -83,7 +84,7 @@ int Building::getLiftFloor(LiftBase *lift) throw(std::out_of_range)
     int floor = 0;
     for(int i = 0; i < floors.count()-1 && bGoSearching; i++)
     {
-        if(floors[i]->y() >= lift->y() && (floors[i]->y() - floors[i]->height()) <= lift->y())
+        if(floors[i]->y() <= lift->y() && (floors[i]->y() + floors[i]->height()) >= lift->y())
         {
             bGoSearching = false;
             floor = i;
@@ -94,4 +95,12 @@ int Building::getLiftFloor(LiftBase *lift) throw(std::out_of_range)
         throw std::out_of_range("Lift is out of the building");
 
     return floor;
+}
+
+int Building::getFloorY(int floor) throw (std::out_of_range)
+{
+    if(floor > floors.count() || floor < 0)
+        throw std::out_of_range("non-existing floor y coordinate required!");
+
+    return floors[floor]->y();
 }

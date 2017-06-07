@@ -1,3 +1,4 @@
+#include <QObject>
 #include "buildingdesigner.h"
 #include "floor.h"
 #include "tunnel.h"
@@ -9,9 +10,6 @@ Building *BuildingDesigner::constructBuilding(int floorCount, QWidget *parent) n
     Building *building = builder.getBuilding(parent);
 
 
-    // И этажи
-    for(int i = 0; i < floorCount; i++)
-        building->addFloor(builder.getFloor(i));
 
     // Добавляем шахту с лифтом
     LiftBase *lift = builder.getLift();
@@ -21,6 +19,15 @@ Building *BuildingDesigner::constructBuilding(int floorCount, QWidget *parent) n
     building->addLift(lift);
     building->addLiftPanel(panel);
     building->connectLiftToPanel();
+    QObject::connect(panel, SIGNAL(callFloor(int,int)), lift, SLOT(addDestination(int,int)));
+
+    // И этажи
+    for(int i = 0; i < floorCount; i++)
+    {
+        Floor *floor = builder.getFloor(i);
+        building->addFloor(floor);
+        QObject::connect(floor, SIGNAL(callLift(int,int)), lift, SLOT(addDestination(int,int)));
+    }
 
     // Дабы изменить размеры виджетов в соответствии с layout
     building->show();

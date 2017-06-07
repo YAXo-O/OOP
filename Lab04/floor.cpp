@@ -1,6 +1,7 @@
 #include <QHBoxLayout>
 #include <QPainter>
 #include "floor.h"
+#include "Lift/callinfo.h"
 
 const QString Floor::floorSignPrefix = "Current floor: ";
 
@@ -13,6 +14,8 @@ Floor::Floor(int _floorNum, QColor _wallColor, QWidget *parent) : QWidget(parent
 
     callPB->setText("Call lift");
     floorLab->setText(floorSignPrefix + QString::number(floorNum));
+
+    connect(callPB, SIGNAL(clicked()), this, SLOT(buttonPressed()));
 }
 
 void Floor::changeFloor(int newNum) noexcept
@@ -30,4 +33,9 @@ void Floor::paintEvent(QPaintEvent *)
     p.drawRect(rect());
 
     p.end();
+}
+
+void Floor::buttonPressed()
+{
+    emit callLift(floorNum, callStatus::statusFloor);
 }

@@ -4,9 +4,22 @@
 #include "liftbase.h"
 #include "building.h"
 #include "LiftStates/idlestate.h"
+#include "statemachine.h"
+
+bool less(const int i, const int j)
+{
+    return i < j;
+}
+
+bool more(const int i, const int j)
+{
+    return i > j;
+}
 
 LiftBase::LiftBase(QColor backColor, QWidget *parent) : QWidget(parent), backWallColor(backColor),
-    curState(new IdleState(this)), owner(nullptr), bNoTarget(true)
+    speedRate(10),
+    curState(new IdleState(this)), owner(nullptr), bNoTarget(true),
+    door(new LiftDoors(Qt::gray, this)), machine(new Machine(this))
 {
 }
 
@@ -38,8 +51,87 @@ Building *LiftBase::getOwner() noexcept
     return owner;
 }
 
-void LiftBase::changeState(LiftState *current, int event) throw(std::invalid_argument)
+void LiftBase::changeState(int event) throw(std::invalid_argument)
 {
+    machine->getState(curState, event);
+}
+
+void LiftBase::updateLists() noexcept
+{
+    int curFloor = getFloor();
+    if(target == curFloor)
+    {
+        if(target == upperCallsBuilding[0])
+            upperCallsBuilding.remove(0);
+        if(target == lowerCallsBuilding[0])
+            lowerCallsBuilding.remove(0);
+        if(target == upperCallsLift[0])
+            upperCallsLift.remove(0);
+        if(target == lowerCallsLift[0])
+            lowerCallsLift.remove(0);
+
+        chooseTarget();
+    }
+
+    workOnList(upperCallsBuilding, lowerCallsBuilding, less, more);
+    workOnList(upperCallsLift, lowerCallsLift, less, more);
+    workOnList(lowerCallsBuilding, upperCallsBuilding, more, less);
+    workOnList(lowerCallsLift, upperCallsLift, more, less);
+}
+
+void LiftBase::workOnList(QVector<int> &vector, QVector<int> &opposite,
+                          bool (*condition)(const int, const int), bool (*cmp)(const int, const int)) noexcept
+{
+    for(int i = 0; i < vector.count() && condition(vector[i], target); i++)
+    {
+            insert(opposite, vector[i], cmp);
+            vector.remove(i);
+            i--;
+    }
+}
+
+void LiftBase::chooseTarget() noexcept
+{
+    bNoTarget = false;
+
+    // Сначала выборка из вызовов лифта - они приоритетнее
+    if(upperCallsLift.count() + lowerCallsLift.count())
+    {
+        if(upperCallsLift.count() == 0 && lowerCallsLift.count() != 0)
+            target = lowerCallsLift[0];
+        else if(lowerCallsLift.count() == 0 && upperCallsLift.count() != 0)
+            target = upperCallsLift[0];
+        else
+        {
+        int curFloor = getFloor();
+
+        if(upperCallsLift[0] - curFloor <= curFloor - lowerCallsLift[0])
+            target = upperCallsLift[0];
+        else
+            target = lowerCallsLift[0];
+        }
+    }
+    // Иначе выборка из вызовов здания
+    else if(upperCallsBuilding.count() + lowerCallsBuilding.count())
+    {
+        if(upperCallsBuilding.count() == 0 && lowerCallsBuilding.count() != 0)
+            target = lowerCallsLift[0];
+        else if(lowerCallsBuilding.count() == 0 && upperCallsBuilding.count() != 0)
+            target = upperCallsBuilding[0];
+        else
+        {
+        int curFloor = getFloor();
+
+        if(upperCallsBuilding[0] - curFloor <= curFloor - lowerCallsBuilding[0])
+            target = upperCallsBuilding[0];
+        else
+            target = lowerCallsBuilding[0];
+        }
+    }
+    else
+        bNoTarget = true;
+
+    return;
 
 }
 
@@ -52,23 +144,32 @@ void LiftBase::addDestination(int floor, int status) throw(std::invalid_argument
     if(floor > curFloor)
     {
         if(status == callStatus::statusFloor)
-            upperCallsBuilding.append(floor);
+            insert(upperCallsBuilding, floor, more);
         else if(status == callStatus::statusPanel)
-            upperCallsLift.append(floor);
+            insert(upperCallsLift, floor, more);
     }
     else if(floor < curFloor)
     {
         if(status == callStatus::statusFloor)
-            lowerCallsBuilding.append(floor);
+            insert(lowerCallsBuilding, floor, less);
         else if(status == callStatus::statusPanel)
-            lowerCallsLift.append(floor);
+            insert(lowerCallsLift,floor, less);
     }
 
-    // TODO: add situation when lift is on calling floor
     if(bNoTarget)
     {
         bNoTarget = false;
         target = floor;
+    }
+
+    if(target > curFloor)
+        goUp();
+    else if(target < curFloor)
+        goDown();
+    else
+    {
+        bNoTarget = true;
+        openDoors();
     }
 
 }
@@ -115,17 +216,33 @@ void LiftBase::paintEvent(QPaintEvent *)
     p.drawLine(0, height()-4, width(), height()-4);
 
     p.end();
+
+    door->move(0, 8);
+    door->resize(width(), height()-16);
 }
 
-void LiftBase::moveLift(int destination) noexcept
+void LiftBase::insert(QVector<int> &list, int value, bool (*cmpr)(const int v1, const int v2))
 {
-    int path = destination - y();
+    for(auto i: list)
+    {
+        if(cmpr(i, value))
+        {
+            list.insert(i, value);
+            break;
+        }
+    }
+}
+
+void LiftBase::moveLift(int floor) noexcept
+{
+    int path = owner->getFloorY(floor) - y();
     int dir = path/(abs(path));
     int curSpeed = speedRate * dir;
     int cycles = path/curSpeed;
     for(int i = 0; i < cycles; i++)
     {
         move(x(), y() + curSpeed);
+        repaint();
         QThread::msleep(33); // Частота кадров = 30
     }
 }
