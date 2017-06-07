@@ -5,7 +5,7 @@
 #include "building.h"
 
 LiftBase::LiftBase(QColor backColor, QWidget *parent) : QWidget(parent), backWallColor(backColor),
-    curState(new LiftState(this)), owner(nullptr), currentFloor(0)
+    curState(new LiftState(this)), owner(nullptr), bNoTarget(true)
 {
 }
 
@@ -35,6 +35,36 @@ void LiftBase::setOwner(Building *_owner) noexcept
 Building *LiftBase::getOwner() noexcept
 {
     return owner;
+}
+
+void LiftBase::addDestination(int floor, int status) throw(std::invalid_argument)
+{
+    if(status != callStatus::statusFloor && status != callStatus::statusPanel)
+        throw std::invalid_argument("unknown call status");
+
+    int curFloor = getFloor();
+    if(floor > curFloor)
+    {
+        if(status == callStatus::statusFloor)
+            upperCallsBuilding.append(floor);
+        else if(status == callStatus::statusPanel)
+            upperCallsLift.append(floor);
+    }
+    else if(floor < curFloor)
+    {
+        if(status == callStatus::statusFloor)
+            lowerCallsBuilding.append(floor);
+        else if(status == callStatus::statusPanel)
+            lowerCallsLift.append(floor);
+    }
+
+    // TODO: add situation when lift is on calling floor
+    if(bNoTarget)
+    {
+        bNoTarget = false;
+        target = floor;
+    }
+
 }
 
 void LiftBase::goUp() throw(std::logic_error)
