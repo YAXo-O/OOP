@@ -2,6 +2,7 @@
 #include <QVBoxLayout>
 #include "../Button/button.h"
 #include "liftpanel.h"
+#include "callinfo.h"
 
 LiftPanel::LiftPanel(int floors, QWidget *parent) : QWidget(parent), lcdNum(nullptr)
 {
@@ -15,7 +16,7 @@ LiftPanel::LiftPanel(int floors, QWidget *parent) : QWidget(parent), lcdNum(null
     QGridLayout *table = new QGridLayout;
     for(int i = 0; i < floors; i++)
     {
-        Button *pb = new Button;
+        Button *pb = new Button(i);
         pb->setText(QString::number(i));
         table->addWidget(pb, (floors-i-1)%perCol, (floors-i-1)/perCol);
     }
@@ -28,4 +29,12 @@ void LiftPanel::updateFloor(int floor) noexcept
 {
     if(lcdNum)
         lcdNum->display(floor);
+}
+
+void LiftPanel::buttonPressed()
+{
+   Button *btn = qobject_cast<Button *>(sender());
+   int floor = btn->getFloor();
+
+   emit callFloor(floor, callStatus::statusPanel);
 }

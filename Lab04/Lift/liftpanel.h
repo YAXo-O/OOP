@@ -13,6 +13,12 @@ public:
 public slots:
     void updateFloor(int floor) noexcept;
 
+signals:
+    void callFloor(int, int);
+
+private slots:
+    void buttonPressed();
+
 private:
     QLCDNumber *lcdNum;
 

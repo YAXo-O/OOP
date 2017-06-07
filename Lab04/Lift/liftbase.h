@@ -5,14 +5,9 @@
 #include <stdexcept>
 #include <QList>
 #include "LiftStates/liftstate.h"
+#include "callinfo.h"
 
 class Building;
-
-namespace callStatus
-{
-    const int statusFloor = 0;
-    const int statusPanel = 1;
-}
 
 class LiftBase : public QWidget
 {
@@ -25,16 +20,20 @@ public:
 
     void setSpeed(unsigned speed) noexcept;
     unsigned getSpeed() noexcept;
-    int getFloor() throw(std::out_of_range);
+
+    int getFloor() throw(std::out_of_range); // Текущий этаж
+
     void setOwner(Building *owner) noexcept;
     Building *getOwner() noexcept;
-    void addDestination(int floor, int status) throw(std::invalid_argument);
+
+    void changeState(LiftState *current, int event) throw(std::invalid_argument);
 
 public slots:
     void goUp() throw(std::logic_error);
     void goDown() throw(std::logic_error);
     void openDoors() throw(std::logic_error);
     void closeDoors() throw(std::logic_error);
+    void addDestination(int floor, int status) throw(std::invalid_argument);
 
 signals:
     void floorChanged(int floor);
@@ -56,7 +55,7 @@ private:
     bool bNoTarget;
 
 private slots:
-    void moveLift(int destination);
+    void moveLift(int destination) noexcept;
 };
 
 #endif // LIFTBASE_H

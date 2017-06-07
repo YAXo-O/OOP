@@ -1,7 +1,7 @@
 #include <QPainter>
 #include "button.h"
 
-Button::Button(QString text, QWidget *parent) : QPushButton(text, parent), isActivated(false)
+Button::Button(int _floor, QString text, QWidget *parent) : QPushButton(text, parent), isActivated(false), floor(_floor)
 {
     connect(this, SIGNAL(clicked()), this, SLOT(wasClicked()));
 }
@@ -15,6 +15,11 @@ void Button::reset() noexcept
 {
     isActivated = false;
     repaint();
+}
+
+int Button::getFloor() noexcept
+{
+    return floor;
 }
 
 void Button::paintEvent(QPaintEvent *event)

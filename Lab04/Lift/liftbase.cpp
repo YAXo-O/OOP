@@ -3,9 +3,10 @@
 #include <QHBoxLayout>
 #include "liftbase.h"
 #include "building.h"
+#include "LiftStates/idlestate.h"
 
 LiftBase::LiftBase(QColor backColor, QWidget *parent) : QWidget(parent), backWallColor(backColor),
-    curState(new LiftState(this)), owner(nullptr), bNoTarget(true)
+    curState(new IdleState(this)), owner(nullptr), bNoTarget(true)
 {
 }
 
@@ -35,6 +36,11 @@ void LiftBase::setOwner(Building *_owner) noexcept
 Building *LiftBase::getOwner() noexcept
 {
     return owner;
+}
+
+void LiftBase::changeState(LiftState *current, int event) throw(std::invalid_argument)
+{
+
 }
 
 void LiftBase::addDestination(int floor, int status) throw(std::invalid_argument)
@@ -111,7 +117,7 @@ void LiftBase::paintEvent(QPaintEvent *)
     p.end();
 }
 
-void LiftBase::moveLift(int destination)
+void LiftBase::moveLift(int destination) noexcept
 {
     int path = destination - y();
     int dir = path/(abs(path));

@@ -7,10 +7,12 @@ class Button : public QPushButton
 {
     Q_OBJECT
 public:
-    explicit Button(QString text = "Lift Button", QWidget *parent = 0);
+    explicit Button(int floor, QString text = "Lift Button", QWidget *parent = 0);
 
     bool isPushed() noexcept;
     void reset() noexcept;
+
+    int getFloor() noexcept;
 
 signals:
     void activated();
@@ -20,6 +22,7 @@ protected:
 
 private:
     bool isActivated;
+    int floor;
 
 private slots:
     void wasClicked() noexcept;
