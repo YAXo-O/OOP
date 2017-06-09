@@ -21,7 +21,8 @@ void GoDownState::goDown()
     parent->moveLift(curDest);
     parent->updateLists();
 
-    parent->changeState(reachedTarget);
+    emit triggered();
+    //parent->changeState(reachedTarget);
 }
 
 void GoDownState::openDoors()

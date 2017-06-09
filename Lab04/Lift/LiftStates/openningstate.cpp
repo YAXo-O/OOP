@@ -27,7 +27,8 @@ void OpenningState::openDoors()
         QThread::msleep(33);
     }
 
-    parent->changeState(waitDoorsEvent);
+    emit triggered();
+    //parent->changeState(waitDoorsEvent);
 }
 
 void OpenningState::closeDoors()

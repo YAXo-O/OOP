@@ -32,7 +32,6 @@ public:
     void setOwner(Building *owner) noexcept;
     Building *getOwner() noexcept;
 
-    void changeState(int event) throw(std::invalid_argument);
     void updateLists() noexcept;
     void workOnList(QVector<int> &vector, QVector<int> &opposite,
                     bool (*condition)(const int, const int), bool (*cmp)(const int, const int)) noexcept;

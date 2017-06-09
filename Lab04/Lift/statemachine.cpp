@@ -7,72 +7,75 @@
 #include "LiftStates/goupstate.h"
 #include "LiftStates/godownstate.h"
 
-Machine::Machine(LiftBase *_parent): parent(_parent)
+Machine::Machine(LiftBase *_parent, QObject *qparent): QObject(qparent), parent(_parent)
 {
 }
 
-void Machine::getState(LiftState *prev, int event)
+void Machine::floorReached()
 {
-    if(prev == nullptr)
-        return;
+    LiftState *newState = new OpenningState(parent);
 
-    if( (prev->type() == idleState && event == calledHereEvent) ||
-            (prev->type() == goingUpState && event == reachedTarget) ||
-            (prev->type() == goingDownState && event == reachedTarget) )
-    {
-        LiftState *newState = new OpenningState(parent);
+    delete parent->curState;
+    parent->curState = newState;
+    connect(newState, SIGNAL(triggered()), this, SLOT(doorsOpened()));
 
-        delete parent->curState;
-        parent->curState = newState;
+    parent->openDoors();
 
-        parent->openDoors();
-    }
+}
 
-    else if(prev->type() == idleState && event == calledUpEvent)
-    {
-        LiftState *newState = new GoUpState(parent);
+void Machine::goUp()
+{
+    LiftState *newState = new GoUpState(parent);
 
-        delete parent->curState;
-        parent->curState = newState;
+    delete parent->curState;
+    parent->curState = newState;
+    connect(newState, SIGNAL(triggered()), this, SLOT(floorReached()));
 
-        parent->goUp();
-    }
+    parent->goUp();
+}
 
-    else if(prev->type() == idleState && event == calledDownEvent)
-    {
-        LiftState *newState = new GoDownState(parent);
+void Machine::goDown()
+{
+    LiftState *newState = new GoDownState(parent);
 
-        delete parent->curState;
-        parent->curState = newState;
+    delete parent->curState;
+    parent->curState = newState;
+    connect(newState, SIGNAL(triggered()), this, SLOT(floorReached()));
 
-        parent->goDown();
-    }
+    parent->goDown();
+}
 
-    else if(prev->type() == opennigState && event == waitDoorsEvent)
-    {
-        LiftState *newState = new WaitingState(parent);
+void Machine::doorsClosed()
+{
+    IdleState *newState = new IdleState(parent);
 
-        delete parent->curState;
-        parent->curState = newState;
+    delete parent->curState;
+    parent->curState = newState;
 
-        parent->closeDoors();
-    }
+    connect(newState, SIGNAL(triggeredUp()), this, SLOT(goUp()));
+    connect(newState, SIGNAL(triggeredDown()), this, SLOT(goDown()));
+    connect(newState, SIGNAL(triggered()), this, SLOT(floorReached()));
 
-    else if(prev->type() == waitingState && event == closeDoorsEvent)
-    {
-        LiftState *newState = new ClosingState(parent);
+}
 
-        delete parent->curState;
-        parent->curState = newState;
+void Machine::doorsOpened()
+{
+    LiftState *newState = new WaitingState(parent);
 
-        parent->closeDoors();
-    }
+    delete parent->curState;
+    parent->curState = newState;
+    connect(newState, SIGNAL(triggered()), this, SLOT(waitingTimerEvent()));
 
-    else if(prev->type() == closingState && event == goEvent)
-    {
-        LiftState *newState = new IdleState(parent);
+    parent->closeDoors();
+}
 
-        delete parent->curState;
-        parent->curState = newState;
-    }
+void Machine::waitingTimerEvent()
+{
+    LiftState *newState = new ClosingState(parent);
+
+    delete parent->curState;
+    parent->curState = newState;
+    connect(newState, SIGNAL(triggered()), this, SLOT(doorsClosed()));
+
+    parent->closeDoors();
 }

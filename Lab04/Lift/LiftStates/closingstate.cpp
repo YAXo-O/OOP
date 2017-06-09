@@ -32,7 +32,8 @@ void ClosingState::closeDoors()
         QThread::msleep(33);
     }
 
-    parent->changeState(goEvent);
+    emit triggered();
+    //parent->changeState(goEvent);
 }
 
 int ClosingState::type()

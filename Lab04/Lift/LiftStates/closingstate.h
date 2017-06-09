@@ -7,9 +7,10 @@ const int closingState = 4;
 
 class ClosingState : public LiftState
 {
+    Q_OBJECT
 public:
     ClosingState(LiftBase *parent);
-    ~ClosingState() = default;
+    ~ClosingState(){}
 
     void goUp() override;
     void goDown() override;

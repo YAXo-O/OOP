@@ -1,13 +1,16 @@
 #ifndef LIFTSTATE_H
 #define LIFTSTATE_H
 
+#include <QObject>
+
 class LiftBase;
 
-class LiftState
+class LiftState: public QObject
 {
+    Q_OBJECT
 public:
     LiftState(LiftBase *parent);
-    virtual ~LiftState() = default;
+    virtual ~LiftState(){}
 
     virtual void goUp();
     virtual void goDown();
@@ -17,6 +20,9 @@ public:
     virtual int type() = 0; // Задаёт тип текущего состояния
 
     LiftBase *getParent();
+
+signals:
+    void triggered();
 
 protected:
     LiftBase *parent;

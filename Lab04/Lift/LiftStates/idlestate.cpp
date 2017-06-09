@@ -8,17 +8,20 @@ IdleState::IdleState(LiftBase *parent) : LiftState(parent)
 
 void IdleState::goUp()
 {
-    parent->changeState(calledUpEvent);
+    emit triggeredUp();
+    //parent->changeState(calledUpEvent);
 }
 
 void IdleState::goDown()
 {
-    parent->changeState(calledDownEvent);
+    emit triggeredDown();
+    //parent->changeState(calledDownEvent);
 }
 
 void IdleState::openDoors()
 {
-    parent->changeState(calledHereEvent);
+    emit triggered();
+    //parent->changeState(calledHereEvent);
 }
 
 void IdleState::closeDoors()

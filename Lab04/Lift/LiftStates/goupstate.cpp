@@ -14,7 +14,7 @@ void GoUpState::goUp()
     if(parent->upperCallsLift.count() && parent->upperCallsLift[0] < curDest)
         curDest = parent->upperCallsLift[0];
 
-    int newFloor = parent->getFloor() +1;
+    int newFloor = parent->getFloor() + 1;
     while(newFloor <= curDest)
     {
         parent->moveLift(newFloor);
@@ -25,7 +25,8 @@ void GoUpState::goUp()
         newFloor++;
     }
 
-    parent->changeState(reachedTarget);
+    emit triggered();
+    //parent->changeState(reachedTarget);
 }
 
 void GoUpState::goDown()
@@ -38,6 +39,11 @@ void GoUpState::openDoors()
 
 void GoUpState::closeDoors()
 {
+}
+
+void GoUpState::moveLift(int dest) noexcept
+{
+    parent->moveLift(dest);
 }
 
 int GoUpState::type()

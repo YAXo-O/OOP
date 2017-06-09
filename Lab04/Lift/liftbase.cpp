@@ -19,9 +19,15 @@ bool more(const int i, const int j)
 
 LiftBase::LiftBase(QColor backColor, QWidget *parent) : QWidget(parent), backWallColor(backColor),
     speedRate(10),
-    curState(new IdleState(this)), owner(nullptr), bNoTarget(true),
+    curState(nullptr), owner(nullptr), bNoTarget(true),
     door(new LiftDoors(Qt::gray, this)), machine(new Machine(this))
 {
+    IdleState *idle = new IdleState(this);
+    connect(idle, SIGNAL(triggeredUp()), machine, SLOT(goUp()));
+    connect(idle, SIGNAL(triggeredDown()), machine, SLOT(goDown()));
+    connect(idle, SIGNAL(triggered()), machine, SLOT(floorReached()));
+
+    curState = idle;
 }
 
 void LiftBase::setSpeed(unsigned speed) noexcept
@@ -50,11 +56,6 @@ void LiftBase::setOwner(Building *_owner) noexcept
 Building *LiftBase::getOwner() noexcept
 {
     return owner;
-}
-
-void LiftBase::changeState(int event) throw(std::invalid_argument)
-{
-    machine->getState(curState, event);
 }
 
 void LiftBase::updateLists() noexcept

@@ -7,9 +7,10 @@ const int waitingState = 3;
 
 class WaitingState : public LiftState
 {
+    Q_OBJECT
 public:
     WaitingState(LiftBase *parent);
-    ~WaitingState() = default;
+    ~WaitingState(){}
 
     void goUp() override;
     void goDown() override;
@@ -17,6 +18,7 @@ public:
     void closeDoors() override;
 
     int type() override;
+
 
 private:
     unsigned long waitingTime;

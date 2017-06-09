@@ -1,16 +1,24 @@
 #ifndef STATEMACHINE_H
 #define STATEMACHINE_H
 
+#include <QObject>
 #include "liftbase.h"
 #include "LiftStates/liftstate.h"
 
-class Machine
+class Machine: public QObject
 {
+    Q_OBJECT
 public:
-    Machine(LiftBase *parent);
+    explicit Machine(LiftBase *parent, QObject *qparent = 0);
     ~Machine() = default;
 
-    void getState(LiftState *prev, int event);
+public slots:
+    void floorReached();
+    void goUp();
+    void goDown();
+    void doorsClosed();
+    void doorsOpened();
+    void waitingTimerEvent();
 
 private:
     LiftBase *parent;

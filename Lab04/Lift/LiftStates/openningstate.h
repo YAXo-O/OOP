@@ -8,9 +8,10 @@ const int opennigState = 2;
 
 class OpenningState : public LiftState
 {
+    Q_OBJECT
 public:
     OpenningState(LiftBase *parent);
-    ~OpenningState() = default;
+    ~OpenningState(){}
 
     void goUp() override;
     void goDown() override;
@@ -18,6 +19,7 @@ public:
     void closeDoors() override;
 
     int type() override;
+
 
 private:
     float door;

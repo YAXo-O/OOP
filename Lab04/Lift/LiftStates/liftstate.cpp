@@ -1,6 +1,6 @@
 #include "liftstate.h"
 
-LiftState::LiftState(LiftBase *_parent): parent(_parent)
+LiftState::LiftState(LiftBase *_parent): QObject(nullptr), parent(_parent)
 {
 }
 

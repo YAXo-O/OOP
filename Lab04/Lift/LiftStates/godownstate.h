@@ -7,9 +7,10 @@ const int goingDownState = 6;
 
 class GoDownState: public LiftState
 {
+    Q_OBJECT
 public:
     GoDownState(LiftBase *parent);
-    ~GoDownState() = default;
+    ~GoDownState(){}
 
     void goUp() override;
     void goDown() override;
@@ -17,6 +18,7 @@ public:
     void closeDoors() override;
 
     int type() override;
+
 };
 
 #endif // GODOWNSTATE_H

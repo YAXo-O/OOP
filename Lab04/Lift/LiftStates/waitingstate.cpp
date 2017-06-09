@@ -22,7 +22,8 @@ void WaitingState::openDoors()
 void WaitingState::closeDoors()
 {
     QThread::msleep(waitingTime);
-    parent->changeState(closeDoorsEvent);
+    emit triggered();
+    //parent->changeState(closeDoorsEvent);
 }
 
 int WaitingState::type()
