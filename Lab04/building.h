@@ -30,6 +30,7 @@ public:
 
 public slots:
     void reachedFloor(int floor) throw(std::out_of_range);
+    void show();
 
 private:
     QVector<Floor *> floors;

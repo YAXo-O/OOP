@@ -112,3 +112,9 @@ void Building::reachedFloor(int floor) throw(std::out_of_range)
 
     floors[floor-1]->deactivateButton();
 }
+
+void Building::show()
+{
+    QWidget::show();
+    panel->show();
+}

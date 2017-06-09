@@ -163,7 +163,6 @@ void LiftBase::addDestination(int floor, int status) throw(std::invalid_argument
         target = floor;
     }
 
-    qDebug() << curFloor;
     if(target > curFloor)
         goUp();
     else if(target < curFloor)

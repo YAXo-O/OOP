@@ -11,8 +11,5 @@ int main(int argc, char *argv[])
     Building *building = designer.constructBuilding(11);
     building->show();
 
-    LiftPanel panel(11);
-    panel.show();
-
     return a.exec();
 }
