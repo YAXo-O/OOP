@@ -22,7 +22,7 @@ Building *BuildingDesigner::constructBuilding(int floorCount, QWidget *parent) n
     QObject::connect(panel, SIGNAL(callFloor(int,int)), lift, SLOT(addDestination(int,int)));
 
     // И этажи
-    for(int i = 0; i < floorCount; i++)
+    for(int i = 1; i <= floorCount; i++)
     {
         Floor *floor = builder.getFloor(i);
         building->addFloor(floor);

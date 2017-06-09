@@ -16,7 +16,8 @@ void Machine::getState(LiftState *prev, int event)
     if(prev == nullptr)
         return;
 
-    if(prev->type() == idleState && event == calledHereEvent)
+    if( (prev->type() == idleState && event == calledHereEvent) ||
+            (prev->type() == goingUpState && event == reachedTarget) )
     {
         LiftState *newState = new OpenningState(parent);
 
@@ -55,5 +56,4 @@ void Machine::getState(LiftState *prev, int event)
 
         parent->closeDoors();
     }
-
 }

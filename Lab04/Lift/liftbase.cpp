@@ -61,13 +61,13 @@ void LiftBase::updateLists() noexcept
     int curFloor = getFloor();
     if(target == curFloor)
     {
-        if(target == upperCallsBuilding[0])
+        if(upperCallsBuilding.count() && target == upperCallsBuilding[0])
             upperCallsBuilding.remove(0);
-        if(target == lowerCallsBuilding[0])
+        if(lowerCallsBuilding.count() && target == lowerCallsBuilding[0])
             lowerCallsBuilding.remove(0);
-        if(target == upperCallsLift[0])
+        if(upperCallsLift.count() && target == upperCallsLift[0])
             upperCallsLift.remove(0);
-        if(target == lowerCallsLift[0])
+        if(lowerCallsLift.count() && target == lowerCallsLift[0])
             lowerCallsLift.remove(0);
 
         chooseTarget();
