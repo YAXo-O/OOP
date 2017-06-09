@@ -5,10 +5,10 @@
 #include "LiftStates/waitingstate.h"
 #include "LiftStates/closingstate.h"
 #include "LiftStates/goupstate.h"
+#include "LiftStates/godownstate.h"
 
 Machine::Machine(LiftBase *_parent): parent(_parent)
 {
-
 }
 
 void Machine::getState(LiftState *prev, int event)
@@ -17,7 +17,8 @@ void Machine::getState(LiftState *prev, int event)
         return;
 
     if( (prev->type() == idleState && event == calledHereEvent) ||
-            (prev->type() == goingUpState && event == reachedTarget) )
+            (prev->type() == goingUpState && event == reachedTarget) ||
+            (prev->type() == goingDownState && event == reachedTarget) )
     {
         LiftState *newState = new OpenningState(parent);
 
@@ -35,6 +36,16 @@ void Machine::getState(LiftState *prev, int event)
         parent->curState = newState;
 
         parent->goUp();
+    }
+
+    else if(prev->type() == idleState && event == calledDownEvent)
+    {
+        LiftState *newState = new GoDownState(parent);
+
+        delete parent->curState;
+        parent->curState = newState;
+
+        parent->goDown();
     }
 
     else if(prev->type() == opennigState && event == waitDoorsEvent)

@@ -16,6 +16,7 @@ class LiftBase : public QWidget
     friend class OpenningState;
     friend class ClosingState;
     friend class GoUpState;
+    friend class GoDownState;
     friend class Machine;
 
     Q_OBJECT
