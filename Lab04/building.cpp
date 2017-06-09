@@ -104,3 +104,11 @@ int Building::getFloorY(int floor) throw (std::out_of_range)
 
     return floors[floor]->y();
 }
+
+void Building::reachedFloor(int floor) throw(std::out_of_range)
+{
+    if(floor-1 >= floors.count() || floor < 1)
+        throw std::out_of_range("Reached non-existing floor");
+
+    floors[floor-1]->deactivateButton();
+}

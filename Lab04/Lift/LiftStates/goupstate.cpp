@@ -14,8 +14,16 @@ void GoUpState::goUp()
     if(parent->upperCallsLift.count() && parent->upperCallsLift[0] < curDest)
         curDest = parent->upperCallsLift[0];
 
-    parent->moveLift(curDest);
-    parent->updateLists();
+    int newFloor = parent->getFloor() +1;
+    while(newFloor <= curDest)
+    {
+        parent->moveLift(newFloor);
+        parent->updateLists();
+
+        emit parent->floorChanged(newFloor);
+
+        newFloor++;
+    }
 
     parent->changeState(reachedTarget);
 }

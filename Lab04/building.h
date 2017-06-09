@@ -28,6 +28,9 @@ public:
     int getLiftFloor(LiftBase *lift) throw(std::out_of_range);
     int getFloorY(int floor) throw(std::out_of_range);
 
+public slots:
+    void reachedFloor(int floor) throw(std::out_of_range);
+
 private:
     QVector<Floor *> floors;
     QVBoxLayout *floorsLayout;

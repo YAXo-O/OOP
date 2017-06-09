@@ -17,6 +17,11 @@ void Button::reset() noexcept
     repaint();
 }
 
+void Button::setFloor(int _floor) noexcept
+{
+    floor = _floor;
+}
+
 int Button::getFloor() noexcept
 {
     return floor;

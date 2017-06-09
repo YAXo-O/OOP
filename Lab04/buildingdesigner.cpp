@@ -20,6 +20,8 @@ Building *BuildingDesigner::constructBuilding(int floorCount, QWidget *parent) n
     building->addLiftPanel(panel);
     building->connectLiftToPanel();
     QObject::connect(panel, SIGNAL(callFloor(int,int)), lift, SLOT(addDestination(int,int)));
+    QObject::connect(lift, SIGNAL(floorChanged(int)), panel, SLOT(reachedFloor(int)));
+    QObject::connect(lift, SIGNAL(floorChanged(int)), building, SLOT(reachedFloor(int)));
 
     // И этажи
     for(int i = 1; i <= floorCount; i++)

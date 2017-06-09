@@ -24,6 +24,11 @@ void Floor::changeFloor(int newNum) noexcept
     floorLab->setText(floorSignPrefix + QString::number(floorNum));
 }
 
+void Floor::deactivateButton() noexcept
+{
+    callPB->reset();
+}
+
 void Floor::paintEvent(QPaintEvent *)
 {
     QPainter p(this);

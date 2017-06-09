@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QLCDNumber>
+#include "../Button/button.h"
 
 class LiftPanel : public QWidget
 {
@@ -12,6 +13,7 @@ public:
 
 public slots:
     void updateFloor(int floor) noexcept;
+    void reachedFloor(int floor) throw(std::out_of_range);
 
 signals:
     void callFloor(int, int);
@@ -21,6 +23,8 @@ private slots:
 
 private:
     QLCDNumber *lcdNum;
+    Button *buttons;
+    int count;
 
 };
 

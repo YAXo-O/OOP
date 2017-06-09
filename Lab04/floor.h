@@ -13,6 +13,7 @@ public:
     ~Floor() = default;
 
     void changeFloor(int newNum) noexcept;
+    void deactivateButton() noexcept;
 
 signals:
     void callLift(int, int);

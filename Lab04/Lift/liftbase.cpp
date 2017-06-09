@@ -1,6 +1,7 @@
 #include <QThread>
 #include <QPainter>
 #include <QHBoxLayout>
+#include <QDebug>
 #include "liftbase.h"
 #include "building.h"
 #include "LiftStates/idlestate.h"
@@ -162,6 +163,7 @@ void LiftBase::addDestination(int floor, int status) throw(std::invalid_argument
         target = floor;
     }
 
+    qDebug() << curFloor;
     if(target > curFloor)
         goUp();
     else if(target < curFloor)
@@ -169,8 +171,10 @@ void LiftBase::addDestination(int floor, int status) throw(std::invalid_argument
     else
     {
         bNoTarget = true;
+        emit floorChanged(curFloor);
         openDoors();
     }
+
 
 }
 
