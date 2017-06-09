@@ -56,4 +56,12 @@ void Machine::getState(LiftState *prev, int event)
 
         parent->closeDoors();
     }
+
+    else if(prev->type() == closingState && event == goEvent)
+    {
+        LiftState *newState = new IdleState(parent);
+
+        delete parent->curState;
+        parent->curState = newState;
+    }
 }
